@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Foydalanuvchilar | CarShop{% endblock %}
+
+{% block content %}
+<div class="row align-items-center mb-4 g-3">
+    <div class="col-lg-8">
+        <div class="card card-soft hero-card p-4 p-md-5">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <p class="section-label text-white-50 mb-2">Foydalanuvchi boshqaruvi</p>
+                    <h1 class="display-6 fw-bold mb-2">Foydalanuvchilar ro'yxati</h1>
+                    <p class="mb-0 text-white-75">Signup, validatsiya va profil boshqaruvi uchun tayyor sahifa.</p>
+                </div>
+                <div class="text-md-end">
+                    <a href="{% url 'signup' %}" class="btn btn-light btn-lg fw-semibold">
+                        <i class="bi bi-person-plus"></i> Ro'yxatdan o'tish
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card card-soft p-4 h-100">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:56px;height:56px;">
+                    <i class="bi bi-people fs-4"></i>
+                </div>
+                <div>
+                    <div class="fw-semibold">Profil boshqaruvi</div>
+                    <div class="text-muted small">Ko'rish, tahrirlash va o'chirish qulay.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for user in users %}
+        <div class="col-md-6 col-xl-4">
+            <div class="card card-soft h-100 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="rounded-circle object-cover" style="width:64px;height:64px;">
+                    {% else %}
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-semibold" style="width:64px;height:64px;">
+                            {{ user.first_name|first|default:user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <div class="text-muted small">@{{ user.username }}</div>
+                    </div>
+                </div>
+
+                <div class="mb-3 small text-muted">
+                    <div><i class="bi bi-envelope"></i> {{ user.email }}</div>
+                    <div><i class="bi bi-telephone"></i> {{ user.phone|default:'—' }}</div>
+                    <div><i class="bi bi-gender-ambiguous"></i> {{ user.get_gender_display|default:'—' }}</div>
+                </div>
+
+                <p class="text-muted flex-grow-1 mb-4">
+                    {{ user.bio|default:"Bio kiritilmagan."|truncatechars:110 }}
+                </p>
+
+                <div class="d-flex gap-2">
+                    <a href="{% url 'user_detail' user.pk %}" class="btn btn-primary flex-fill">Ko'rish</a>
+                    <a href="{% url 'user_update' user.pk %}" class="btn btn-outline-secondary">Tahrirlash</a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="card card-soft p-5 text-center">
+                <i class="bi bi-person-exclamation display-4 text-primary mb-3"></i>
+                <h3>Hozircha user yo'q</h3>
+                <p class="text-muted mb-4">Birinchi foydalanuvchini ro'yxatdan o'tkazib qo'shing.</p>
+                <a href="{% url 'signup' %}" class="btn btn-primary btn-lg">Ro'yxatdan o'tish</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

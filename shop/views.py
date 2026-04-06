@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from .forms import CarForm
 from .models import Car
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+
 # Create your views here.
 
 class CarListView(ListView):
@@ -15,14 +17,14 @@ class CarDetailView(DetailView):
 
 class CarCreateView(CreateView):
     model = Car
+    form_class = CarForm
     template_name = 'car_form.html'
-    fields = ['brand', 'model', 'year', 'price', 'mileage', 'fuel_type', 'transmission', 'engine_volume', 'color', 'description', 'image']
     success_url = '/'
 
 class CarUpdateView(UpdateView):
     model = Car
+    form_class = CarForm
     template_name = 'car_form.html'
-    fields = ['brand', 'model', 'year', 'price', 'mileage', 'fuel_type', 'transmission', 'engine_volume', 'color', 'description', 'image']
     success_url = '/'
 
 class CarDeleteView(DeleteView):

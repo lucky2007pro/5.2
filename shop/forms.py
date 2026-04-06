@@ -1,31 +1,74 @@
 from django import forms
+
 from .models import Car
+
+
 class CarForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = '__all__'
-        widgets = {
-            'brand': forms.TextInput(attrs={'class': 'form-control'}),
-            'model': forms.TextInput(attrs={'class': 'form-control'}),
-            'year': forms.NumberInput(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'mileage': forms.NumberInput(attrs={'class': 'form-control'}),
-            'fuel_type': forms.Select(attrs={'class': 'form-control'}),
-            'transmission': forms.Select(attrs={'class': 'form-control'}),
-            'engine_volume': forms.NumberInput(attrs={'class': 'form-control'}),
-            'color': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
-            'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+        fields = [
+            "brand",
+            "model",
+            "year",
+            "price",
+            "mileage",
+            "fuel_type",
+            "transmission",
+            "engine_volume",
+            "color",
+            "description",
+            "image",
+            "is_available",
+        ]
+        labels = {
+            "brand": "Brand",
+            "model": "Model",
+            "year": "Yil",
+            "price": "Narx",
+            "mileage": "Yurgan masofa",
+            "fuel_type": "Yoqilg'i turi",
+            "transmission": "Uzatma",
+            "engine_volume": "Dvigatel hajmi",
+            "color": "Rang",
+            "description": "Tavsif",
+            "image": "Rasm",
+            "is_available": "Mavjud",
         }
-    def clean(self):
-        cleaned_data = super().clean()
-        year = cleaned_data.get("year")
-        price = cleaned_data.get("price")
-        mileage = cleaned_data.get("mileage")
-        if year and (year < 1886 or year > 2024):
-            raise forms.ValidationError('year', "Yil 1886 va 2024 orasida bo\'lishi kerak.")
-        if price and price < 0:
-            raise forms.ValidationError('price', "Narx bo\'lishi kerak.")
-        if mileage and mileage < 0:
-            raise forms.ValidationError('mileage', "Yurgan masofa manfiy bo\'lmasligi kerak.")
-        return cleaned_data
+        widgets = {
+            "brand": forms.TextInput(attrs={"class": "form-control", "placeholder": "Masalan: Toyota"}),
+            "model": forms.TextInput(attrs={"class": "form-control", "placeholder": "Masalan: Camry"}),
+            "year": forms.NumberInput(attrs={"class": "form-control", "min": 1886}),
+            "price": forms.NumberInput(attrs={"class": "form-control", "min": 0, "step": "0.01"}),
+            "mileage": forms.NumberInput(attrs={"class": "form-control", "min": 0}),
+            "fuel_type": forms.Select(attrs={"class": "form-select"}),
+            "transmission": forms.Select(attrs={"class": "form-select"}),
+            "engine_volume": forms.NumberInput(attrs={"class": "form-control", "min": 0, "step": "0.1"}),
+            "color": forms.TextInput(attrs={"class": "form-control", "placeholder": "Masalan: qora"}),
+            "description": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "Avtomobil haqida qisqacha yozing"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "is_available": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def clean_year(self):
+        year = self.cleaned_data.get("year")
+        if year < 1886 or year > 2026:
+            raise forms.ValidationError("Yil 1886 va 2026 orasida bo'lishi kerak.")
+        return year
+
+    def clean_price(self):
+        price = self.cleaned_data.get("price")
+        if price < 0:
+            raise forms.ValidationError("Narx manfiy bo'lishi mumkin emas.")
+        return price
+
+    def clean_mileage(self):
+        mileage = self.cleaned_data.get("mileage")
+        if mileage < 0:
+            raise forms.ValidationError("Yurgan masofa manfiy bo'lishi mumkin emas.")
+        return mileage
+
+    def clean_engine_volume(self):
+        engine_volume = self.cleaned_data.get("engine_volume")
+        if engine_volume < 0:
+            raise forms.ValidationError("Dvigatel hajmi manfiy bo'lishi mumkin emas.")
+        return engine_volume

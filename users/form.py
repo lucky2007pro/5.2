@@ -9,11 +9,13 @@ from .models import User
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Parolni kiriting"}),
+        label="Parol",
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Parolni kiriting"}),
         min_length=8,
     )
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={"placeholder": "Parolni tasdiqlang"}),
+        label="Parolni tasdiqlash",
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Parolni tasdiqlang"}),
         min_length=8,
     )
 
@@ -31,21 +33,33 @@ class UserForm(forms.ModelForm):
             "bio",
             "car",
         ]
+        labels = {
+            "username": "Username",
+            "first_name": "Ism",
+            "last_name": "Familiya",
+            "email": "Email",
+            "phone": "Telefon raqam",
+            "birth_date": "Tug'ilgan sana",
+            "gender": "Jins",
+            "avatar": "Avatar",
+            "bio": "Bio",
+            "car": "Avtomobil",
+        }
         widgets = {
-            "first_name": forms.TextInput(attrs={"class": "form-control"}),
-            "last_name": forms.TextInput(attrs={"class": "form-control"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
-            "phone": forms.TextInput(attrs={"class": "form-control"}),
-            "gender": forms.Select(attrs={"class": "form-control"}),
+            "username": forms.TextInput(attrs={"class": "form-control", "placeholder": "Username"}),
+            "first_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ismingiz"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Familiyangiz"}),
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "example@gmail.com"}),
+            "phone": forms.TextInput(attrs={"class": "form-control", "placeholder": "998901234567"}),
             "birth_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "avatar": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
-            "bio": forms.Textarea(attrs={"class": "form-control", "rows": 5}),
-            "car": forms.Select(attrs={"class": "form-control"}),
+            "gender": forms.Select(attrs={"class": "form-select"}),
+            "avatar": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "bio": forms.Textarea(attrs={"class": "form-control", "rows": 5, "placeholder": "O'zingiz haqingizda yozing"}),
+            "car": forms.Select(attrs={"class": "form-select"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Signup uchun asosiy maydonlarni majburiy qilamiz.
         self.fields["username"].required = True
         self.fields["first_name"].required = True
         self.fields["last_name"].required = True
@@ -78,17 +92,17 @@ class UserForm(forms.ModelForm):
         if not email.endswith("@gmail.com"):
             raise forms.ValidationError("Email manzili @gmail.com bilan tugashi kerak.")
         if User.objects.filter(email__iexact=email).exists():
-            raise forms.ValidationError("Bu email allaqon ro'yxatdan o'tgan.")
+            raise forms.ValidationError("Bu email allaqachon ro'yxatdan o'tgan.")
         return email
 
     def clean_phone(self):
         phone = (self.cleaned_data.get("phone") or "").strip()
         if not phone.isdigit():
             raise forms.ValidationError("Telefon raqam faqat raqamlardan iborat bo'lishi kerak.")
-        if len(phone) != 11:
-            raise forms.ValidationError("Telefon raqam 11 ta raqam bo'lishi kerak.")
+        if len(phone) != 12 and len(phone) != 13:
+            raise forms.ValidationError("Telefon raqam to'g'ri formatda bo'lishi kerak.")
         if User.objects.filter(phone=phone).exists():
-            raise forms.ValidationError("Bu telefon raqam allaqon ro'yxatdan o'tgan.")
+            raise forms.ValidationError("Bu telefon raqam allaqachon ro'yxatdan o'tgan.")
         return phone
 
     def clean_birth_date(self):
@@ -130,3 +144,33 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["username", "first_name", "last_name", "email", "phone", "birth_date", "gender", "avatar", "bio", "car"]
+        labels = {
+            "username": "Username",
+            "first_name": "Ism",
+            "last_name": "Familiya",
+            "email": "Email",
+            "phone": "Telefon raqam",
+            "birth_date": "Tug'ilgan sana",
+            "gender": "Jins",
+            "avatar": "Avatar",
+            "bio": "Bio",
+            "car": "Avtomobil",
+        }
+        widgets = {
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "last_name": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "phone": forms.TextInput(attrs={"class": "form-control"}),
+            "birth_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "gender": forms.Select(attrs={"class": "form-select"}),
+            "avatar": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "bio": forms.Textarea(attrs={"class": "form-control", "rows": 5}),
+            "car": forms.Select(attrs={"class": "form-select"}),
+        }

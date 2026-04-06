@@ -1,8 +1,8 @@
-from .form import UserForm
 from django.urls import reverse_lazy
-from .models import User
-from shop.models import Car
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .form import UserForm
+from .models import User
 
 class UserListView(ListView):
     model = User
@@ -10,7 +10,7 @@ class UserListView(ListView):
     context_object_name = 'users'
 
 class UserDetailView(DetailView):
-    model = User, Car
+    model = User
     template_name = 'user_detail.html'
     context_object_name = 'user'
 
@@ -18,18 +18,14 @@ class SignUpView(CreateView):
     model = User
     form_class = UserForm
     template_name = 'signup.html'
-    success_url = reverse_lazy('login')
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        password = form.cleaned_data.get('password')
-        user.set_password(password)
-        user.save()
-        return super().form_valid(form)
+    success_url = reverse_lazy('user_list')
 
 class UserUpdateView(UpdateView):
     model = User
     template_name = 'user_form.html'
+    fields = ['first_name', 'last_name', 'email', 'phone', 'birth_date', 'gender', 'avatar', 'bio', 'car']
+    success_url = reverse_lazy('user_list')
 
 class UserDeleteView(DeleteView):
     model = User
-    success_url = '/'
+    success_url = reverse_lazy('user_list')

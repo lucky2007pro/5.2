@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Ro'yxatdan o'tish | CarShop{% endblock %}
+{% block title %}Ro'yxatdan o'tish | Online Shop{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -8,16 +8,16 @@
         <div class="card card-soft p-4 p-md-5">
             <div class="mb-4">
                 <p class="section-label mb-1">Yangi akkaunt</p>
-                <h1 class="h3 mb-0">Ro'yxatdan o'tish</h1>
-                <p class="text-muted mt-2 mb-0">Barcha maydonlar alohida validatsiyadan o'tadi va parol xavfsiz saqlanadi.</p>
+                <h1 class="h3 mb-2">Ro'yxatdan o'tish</h1>
+                <p class="text-muted mb-0">Har bir maydon uchun validatsiya ishlaydi: login, email, telefon, yosh, parol va boshqalar.</p>
             </div>
 
             <form method="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
                 {% include 'includes/form_fields.html' %}
-                <div class="d-flex gap-2 mt-4">
+                <div class="d-flex flex-wrap gap-2 mt-4">
                     <button type="submit" class="btn btn-primary px-4">Ro'yxatdan o'tish</button>
-                    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">Bekor qilish</a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Akkaunt bor, kirish</a>
                 </div>
             </form>
         </div>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Car o'chirish | CarShop{% endblock %}
+{% block title %}Mahsulotni o'chirish | Online Shop{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -9,18 +9,19 @@
             <div class="mb-3">
                 <span class="badge text-bg-danger rounded-pill px-3 py-2">Diqqat</span>
             </div>
-            <h1 class="h3 mb-3">Avtomobilni o'chirishni tasdiqlaysizmi?</h1>
+            <h1 class="h3 mb-3">Mahsulotni o'chirishni tasdiqlaysizmi?</h1>
             <p class="text-muted mb-4">
-                <strong>{{ object.brand }} {{ object.model }}</strong> ({{ object.year }}) avtomobili butunlay o'chiriladi.
+                <strong>{{ object.name }}</strong> mahsuloti butunlay o'chiriladi.
             </p>
             <form method="post">
                 {% csrf_token %}
                 <div class="d-flex justify-content-center gap-2">
                     <button type="submit" class="btn btn-danger px-4">Ha, o'chirish</button>
-                    <a href="{% url 'car_detail' object.pk %}" class="btn btn-outline-secondary">Bekor qilish</a>
+                    <a href="{% url 'product_detail' object.pk %}" class="btn btn-outline-secondary">Bekor qilish</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 {% endblock %}
+

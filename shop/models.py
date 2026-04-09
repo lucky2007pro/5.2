@@ -1,35 +1,45 @@
+from django.conf import settings
 from django.db import models
 
-class Car(models.Model):
-    FUEL_CHOICES = [
-        ('benzin', 'Benzin'),
-        ('dizel', 'Dizel'),
-        ('elektr', 'Elektr'),
-        ('gibrid', 'Gibrid'),
-    ]
-    TRANSMISSION_CHOICES = [
-        ('mexanika', 'Mexanika'),
-        ('avtomat', 'Avtomat'),
-        ('variator', 'Variator'),
-    ]
-    brand = models.CharField(max_length=100)
-    model = models.CharField(max_length=100)
-    year = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=12, decimal_places=2)
-    mileage = models.PositiveIntegerField()
-    fuel_type = models.CharField(max_length=20, choices=FUEL_CHOICES, default='benzin')
-    transmission = models.CharField(max_length=20, choices=TRANSMISSION_CHOICES)
-    engine_volume = models.FloatField(verbose_name="Dvigatel hajmi")
-    color = models.CharField(max_length=50)
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='cars/', blank=True, null=True)
-    is_available = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Kategoriya"
+        verbose_name_plural = "Kategoriyalar"
+
+
+class Product(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="products",
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.PROTECT,
+        related_name="products",
+    )
+    name = models.CharField(max_length=150)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    stock = models.PositiveIntegerField(default=0)
+    image = models.ImageField(upload_to="products/", blank=True, null=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.brand} {self.model} ({self.year})"
+        return f"{self.name} - {self.owner.username}"
 
     class Meta:
-        verbose_name = "Avtomobil"
-        verbose_name_plural = "Avtomobillar"
+        ordering = ["-created_at"]
+        verbose_name = "Mahsulot"
+        verbose_name_plural = "Mahsulotlar"

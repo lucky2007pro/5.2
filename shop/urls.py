@@ -1,10 +1,19 @@
 from django.urls import path
-from .views import CarListView, CarDetailView, CarCreateView, CarUpdateView, CarDeleteView
+
+from .views import (
+    MyProductsView,
+    ProductCreateView,
+    ProductDeleteView,
+    ProductDetailView,
+    ProductListView,
+    ProductUpdateView,
+)
 
 urlpatterns = [
-    path('', CarListView.as_view(), name='car_list'),
-    path('<int:pk>/', CarDetailView.as_view(), name='car_detail'),
-    path('create/', CarCreateView.as_view(), name='car_create'),
-    path('<int:pk>/update/', CarUpdateView.as_view(), name='car_update'),
-    path('<int:pk>/delete/', CarDeleteView.as_view(), name='car_delete'),
+    path("", ProductListView.as_view(), name="product_list"),
+    path("products/create/", ProductCreateView.as_view(), name="product_create"),
+    path("products/mine/", MyProductsView.as_view(), name="my_products"),
+    path("products/<int:pk>/", ProductDetailView.as_view(), name="product_detail"),
+    path("products/<int:pk>/edit/", ProductUpdateView.as_view(), name="product_update"),
+    path("products/<int:pk>/delete/", ProductDeleteView.as_view(), name="product_delete"),
 ]

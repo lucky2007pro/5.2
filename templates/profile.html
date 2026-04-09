@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Profil | Online Shop{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card card-soft p-4 text-center h-100">
+            {% if request.user.avatar %}
+                <img src="{{ request.user.avatar.url }}" alt="{{ request.user.username }}" class="rounded-circle mx-auto mb-3 object-cover" style="width:140px;height:140px;">
+            {% else %}
+                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3 fw-bold" style="width:140px;height:140px;font-size:2.6rem;">
+                    {{ request.user.first_name|first|default:request.user.username|first|upper }}
+                </div>
+            {% endif %}
+            <h1 class="h4 mb-1">{{ request.user.first_name }} {{ request.user.last_name }}</h1>
+            <div class="text-muted mb-3">@{{ request.user.username }}</div>
+            <div class="d-grid gap-2">
+                <a href="{% url 'profile_edit' %}" class="btn btn-outline-primary">Profilni tahrirlash</a>
+                <a href="{% url 'password_change' %}" class="btn btn-outline-secondary">Parolni almashtirish</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card card-soft p-4 p-md-5 h-100">
+            <p class="section-label mb-2">Asosiy ma'lumotlar</p>
+            <div class="row g-3">
+                <div class="col-md-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Email</div><div class="fw-semibold">{{ request.user.email }}</div></div></div>
+                <div class="col-md-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Telefon</div><div class="fw-semibold">{{ request.user.phone }}</div></div></div>
+                <div class="col-md-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Tug'ilgan sana</div><div class="fw-semibold">{{ request.user.birth_date }}</div></div></div>
+                <div class="col-md-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Jins</div><div class="fw-semibold">{{ request.user.get_gender_display }}</div></div></div>
+            </div>
+
+            <div class="mt-4">
+                <h2 class="h5 mb-2">Bio</h2>
+                <p class="text-muted mb-0">{{ request.user.bio }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

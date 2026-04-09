@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Mening mahsulotlarim | Online Shop{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+        <p class="section-label mb-1">Shaxsiy kabinet</p>
+        <h1 class="h3 mb-0">Mening mahsulotlarim</h1>
+    </div>
+    <a href="{% url 'product_create' %}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Yangi mahsulot</a>
+</div>
+
+<div class="card card-soft p-3 p-md-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Nomi</th>
+                    <th>Kategoriya</th>
+                    <th>Narx</th>
+                    <th>Soni</th>
+                    <th>Holat</th>
+                    <th class="text-end">Amallar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td><a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a></td>
+                        <td>{{ product.category.name }}</td>
+                        <td>{{ product.price }} so'm</td>
+                        <td>{{ product.stock }}</td>
+                        <td>
+                            <span class="badge text-bg-{% if product.is_active %}success{% else %}secondary{% endif %}">
+                                {% if product.is_active %}Faol{% else %}Nofaol{% endif %}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-outline-primary" href="{% url 'product_update' product.pk %}">Tahrirlash</a>
+                            <a class="btn btn-sm btn-outline-danger" href="{% url 'product_delete' product.pk %}">O'chirish</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted">Siz hali mahsulot qo'shmagansiz.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

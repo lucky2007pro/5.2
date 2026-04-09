@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | Online Shop{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card card-soft overflow-hidden h-100">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-100 object-cover" style="height: 420px;">
+            {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center" style="height: 420px;">
+                    <span class="text-muted">Rasm mavjud emas</span>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card card-soft p-4 h-100">
+            <p class="section-label mb-1">Mahsulot tafsiloti</p>
+            <h1 class="h2 mb-2">{{ product.name }}</h1>
+            <div class="text-muted mb-3">Kategoriya: {{ product.category.name }}</div>
+
+            <div class="display-6 fw-bold text-primary mb-3">{{ product.price }} so'm</div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Soni</div><div class="fw-semibold">{{ product.stock }} dona</div></div></div>
+                <div class="col-6"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Holati</div><div class="fw-semibold">{% if product.is_active %}Faol{% else %}Nofaol{% endif %}</div></div></div>
+                <div class="col-12"><div class="p-3 bg-light rounded-3"><div class="text-muted small">Egasi</div><div class="fw-semibold">@{{ product.owner.username }}</div></div></div>
+            </div>
+
+            <h2 class="h5">Tavsif</h2>
+            <p class="text-muted">{{ product.description }}</p>
+
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <a href="{% url 'product_list' %}" class="btn btn-secondary">Orqaga</a>
+                {% if request.user == product.owner %}
+                    <a href="{% url 'product_update' product.pk %}" class="btn btn-outline-primary">Tahrirlash</a>
+                    <a href="{% url 'product_delete' product.pk %}" class="btn btn-outline-danger">O'chirish</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

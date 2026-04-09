@@ -6,6 +6,17 @@ from django.contrib.auth.password_validation import validate_password
 
 from .models import User
 
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label="Foydalanuvchi nomi",
+        max_length=150,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Loginni kiriting", "autocomplete": "username"}),
+    )
+    password = forms.CharField(
+        label="Parol",
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "Parolni kiriting", "autocomplete": "current-password"}),
+    )
+    
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(
